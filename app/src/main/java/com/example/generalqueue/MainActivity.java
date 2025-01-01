@@ -31,14 +31,31 @@ public class MainActivity extends AppCompatActivity {
         tv.setText(""+queue.Capacity());
         Button btnEnQueue = findViewById(R.id.btnEnQueue);
         btnEnQueue.setOnClickListener(view -> {
-            for (int i = 0; i < 10; i++) {
-                queue.enqueue((int)(Math.random()*100));
+            if (queue.isFull()){
+                Toast.makeText(this,"队列已满,无法入队",Toast.LENGTH_LONG).show();
+                return;
             }
+            if (queue.isEmpty()||queue.getRear()>0 && (queue.Capacity()-queue.getRear())>=10){
+                for (int i = 0; i < 10; i++) {
+                    queue.enqueue((int)(Math.random()*100));
+                }
+            }else{
+                int tmpCount=queue.Capacity()-(queue.getRear()+1);
+                Toast.makeText(this,"当前队列只剩下可入队数:"+tmpCount,Toast.LENGTH_LONG).show();
+                for (int i = 0; i < tmpCount; i++) {
+                    queue.enqueue((int)(Math.random()*100));
+                }
+            }
+
             Toast.makeText(this,"当前队列长度:"+queue.Count() + " 队头: "+queue.getFront() + " 队尾: "+queue.getRear(),Toast.LENGTH_LONG).show();
         });
 
         Button btnDequeu = findViewById(R.id.btnDeQueue);
         btnDequeu.setOnClickListener(view -> {
+            if (queue.isEmpty()){
+                Toast.makeText(this,"队列为空,无法出队",Toast.LENGTH_LONG).show();
+                return;
+            }
             for (int i = 0; i < 5; i++) {
                 queue.dequeue();
             }
